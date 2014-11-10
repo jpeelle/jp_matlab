@@ -45,10 +45,11 @@ if ~isfield(Cfg, 'endWithDownbeat') || isempty(Cfg.endWithDownbeat)
 end
 
 
-pauseBetweenTones = zeros(round(pauseBetweenTonesSec*fs),1);
+pauseBetweenTones = zeros(round(Cfg.pauseBetweenTonesSec*Cfg.fs),1);
 
-toneDuration = beatLengthSec - pauseBetweenTonesSec;
+toneDuration = Cfg.beatLengthSec - Cfg.pauseBetweenTonesSec;
 
+fs = Cfg.fs;
 
 % initialize vector for holding things. It would be more efficient to not
 % resize this all the time but it's probably ok for the size sounds we are
@@ -59,13 +60,13 @@ toneCfg = [];
 toneCfg.fs = fs;
 
 for note=pattern
-   tone = jp_maketone(toneFreq, toneDuration*note, toneCfg);
+   tone = jp_maketone(Cfg.toneFreq, toneDuration*note, toneCfg);
    y = [y; tone; pauseBetweenTones];        
 end
 
 % If requested, add one more beat at end
-if endWithDownbeat
-    tone = jp_maketone(toneFreq, toneDuration, toneCfg);
+if Cfg.endWithDownbeat
+    tone = jp_maketone(Cfg.toneFreq, toneDuration, toneCfg);
     y = [y; tone];
 end
 

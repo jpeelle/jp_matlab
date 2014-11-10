@@ -49,7 +49,37 @@ function [wave, fs, bits] = jp_vocode(soundfile, num_channels, opts)
 %   frequency band, regardless of which envelope is used.
 %
 %
-%   VOCODE requires the signal processing toolbox.
+%   JP_VOCODE requires the signal processing toolbox.
+%
+%
+% To vocode a group of .wav files (say, in a directory called
+% 'soundfiles'), you might try something like this:
+%
+%     inputDirectory = '/path/to/input/soundfiles/';
+%     outputDirectory = '/path/to/output/soundfiles/';
+%     numChannels = 8;  % how many channels in vocoding
+% 
+%     % Check to make sure output directory exists
+%     if ~isdir(outputDirectory)
+%         mkdir(outputDirectory);
+%     end
+% 
+%     % Get a list of all the .wav files in the input directory
+%     D = dir(fullfile(inputDirectory,'*.wav'));
+% 
+%     % Go through each file, vocode it, and save it in the output directory
+%     fprintf('Vocoding %d files...', length(D));
+%     for fileInd = 1:length(D)    
+%         inputFullPath = fullfile(inputDirectory, D(fileInd).name);    
+%         [inputPath, inputName, inputExt] = fileparts(inputFullPath);
+% 
+%         [wave, fs, bits] = jp_vocode(inputFullPath, numChannels);    
+%         outputFullPath = fullfile(outputDirectory, sprintf('%s_%02dchannels.wav', inputName, numChannels));    
+%         wavwrite(wave, fs, bits, outputFullPath);
+%     end
+% 
+%     fprintf('done. %d files written.\n', length(D));
+%
 %
 %   Jonathan Peelle
 %   Based on code from Stuart Rosen, based on work of Philip Loizou
@@ -320,4 +350,17 @@ if opts.verbose > 0
   fprintf('Done.\n');
 end
 
+end % main function
 
+
+function x = jp_rms(y)
+%JP_RMS Root mean square.
+%
+%   X = JP_RMS(Y) where Y is a 1-by-N (or N-by-1) vector returns the root mean
+%   square value of Y:
+%
+%   x = sqrt(sum(y.^2)/length(y));
+
+if min(size(y))>1; error('RMS requires a 1-by-N or N-by-1 vector.'); end
+x = sqrt(sum(y.^2)/length(y));
+end % rms function

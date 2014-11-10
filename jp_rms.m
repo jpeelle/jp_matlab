@@ -7,5 +7,5 @@ function x = jp_rms(y)
 %   x = sqrt(sum(y.^2)/length(y));
 
 if min(size(y))>1; error('RMS requires a 1-by-N or N-by-1 vector.'); end
-x = sqrt(sum(y.^2)/length(y));
+x = sqrt(mean(y.^2));
 end % rms function

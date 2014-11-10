@@ -86,7 +86,7 @@ if verbose > 0; fprintf('done.\n Found %i files.\n', num_wav); end
 
 if verbose > 0; fprintf('Looping through files again to adjust info...'); end
 
-g = maxvol/max_amplitude;
+g = maxvol./max_amplitude;
 
 fprintf('Maximum absolute amplitude found was %.3f; multiplying each sound file by %.3f.\n', max_amplitude, g);
 

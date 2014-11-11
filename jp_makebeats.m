@@ -1,4 +1,4 @@
-function [y, fs, name] = jp_makebeats(pattern, Cfg);
+function [y, fs, name] = jp_makebeats(pattern, Cfg)
 %JP_MAKEBEATS Create rhythmic stimuli.
 %
 %  [Y,FS] = JP_MAKEBEATS(PATTERN) creates beats with the specified
@@ -9,16 +9,17 @@ function [y, fs, name] = jp_makebeats(pattern, Cfg);
 %  [Y,FS] = JP_MAKEBEATS(PATTERN,CFG) allows setting configuration options
 %  including:
 %
-%    CFG.beatLengthSec  Corresponding to one "beat" (deafult 0.25 sec)
+%    CFG.beatLengthSec         Corresponding to one "beat" (deafult 0.25 sec)
 %    CFG.pauseBetweenTonesSec  Does not change beat length, but inserts pause between beats (default .05)
 %    CFG.toneFreq              Frequency of the tone in Hz (default 700)
 %    CFG.fs                    Sampling rate (default 22050)
 %    CFG.endWithDownbeat       Add final beat (default 1)
 %
-%  [Y,FS,NAME] = JP_MAKEBEATS... returns a name that could be used for
-%  saving the result to a sound file.
-
-%pattern = [1 1 2 1 1 2 2 2];
+%  [Y,FS,NAME] = JP_MAKEBEATS... returns a name including the beat duration
+%  and pattern that could be used for saving the result to a sound file.
+%
+%  JP_MAKEBEATS uses JP_MAKETONE. For an example of how to loop through and
+%  create several stimuli, see JP_MAKEBEATS_WRAPPER.
 
 if nargin < 2
     Cfg = [];
@@ -46,9 +47,7 @@ end
 
 
 pauseBetweenTones = zeros(round(Cfg.pauseBetweenTonesSec*Cfg.fs),1);
-
 toneDuration = Cfg.beatLengthSec - Cfg.pauseBetweenTonesSec;
-
 fs = Cfg.fs;
 
 % initialize vector for holding things. It would be more efficient to not
@@ -71,4 +70,4 @@ if Cfg.endWithDownbeat
 end
 
 tmpName = regexprep(num2str(pattern), '[ ]*', '_'); % replace whitespace with _
-name = sprintf('sound_%s.wav', tmpName);
+name = sprintf('beat%.03f_%s.wav', Cfg.beatLengthSec, tmpName);

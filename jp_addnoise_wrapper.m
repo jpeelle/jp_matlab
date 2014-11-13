@@ -1,3 +1,6 @@
+%
+%  From https://github.com/jpeelle/jp_matlab
+
 clear all
 
 % The original files are in originalDir; the thinking is that these should

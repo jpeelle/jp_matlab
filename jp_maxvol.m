@@ -4,7 +4,8 @@ function jp_maxvol(input_dirs, output_dirs, maxvol)
 % JP_MAXVOL(INPUTDIR, OUTPUTDIR, [MAXVOL]) where MAXVOL defaults to .97.
 %
 %
-
+%
+%  From https://github.com/jpeelle/jp_matlab
 
 if nargin < 2 || isempty(output_dirs)
     output_dirs = input_dirs;
@@ -16,7 +17,7 @@ elseif ischar(output_dirs)
         end
 
 else
-    error('Not sure how to handle output_dirs');    
+    error('Not sure how to handle output_dirs');
 end
 
 
@@ -68,13 +69,13 @@ for i=1:length(input_dirs)
     for j = 1:length(d)
         fileName = d(j).name;
         if length(fileName)>4 && strcmp(lower(fileName(end-3:end)),'.wav')
-            
-            [y,fs,bits] = wavread(fullfile(input_dirs{i},fileName));
+
+            [y,fs,bits] = audioread(fullfile(input_dirs{i},fileName));
             num_wav = num_wav + 1;
             if max(abs(y)) > max_amplitude
                 max_amplitude = max(abs(y));
             end
-        end        
+        end
     end
 end % going through input_dirs to get files
 
@@ -100,12 +101,12 @@ for i=1:length(input_dirs)
             infile = fullfile(input_dirs{i}, fileName);
             movefile = fullfile(input_dirs{i}, sprintf('OLD%s',fileName));
 
-            [y,fs,bits] = wavread(infile);
+            [y,fs,bits] = audioread(infile);
 
             y2 = y .* g;
-            
+
             outfile = fullfile(output_dirs{i}, fileName);
-            wavwrite(y2, fs, bits, outfile)
+            audiowrite(y2, fs, bits, outfile)
 
         end
     end

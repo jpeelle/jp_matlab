@@ -3,7 +3,8 @@ function jp_equalize(input_dirs, output_dirs, equaltype, verbose)
 %
 %  equaltype = rms or max
 %
-
+%
+%  From https://github.com/jpeelle/jp_matlab
 
 if nargin < 2 || isempty(output_dirs)
   output_dirs = input_dirs;

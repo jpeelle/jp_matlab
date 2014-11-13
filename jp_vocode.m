@@ -3,7 +3,7 @@ function [wave, fs, bits] = jp_vocode(soundfile, num_channels, opts)
 %   [Y, FS, BITS] = JP_VOCODE(sound, num_channels, [opts])
 %   will return a sound vector Y at sampling rate FS with BITS bits
 %   sampling rate, suitable for being played with the SOUND function or
-%   written with WAVWRITE.  This is noise vocoding with logarithmic
+%   written with audiowrite.  This is noise vocoding with logarithmic
 %   spacing between frequency bands.
 %
 %   Input arguments:
@@ -58,32 +58,34 @@ function [wave, fs, bits] = jp_vocode(soundfile, num_channels, opts)
 %     inputDirectory = '/path/to/input/soundfiles/';
 %     outputDirectory = '/path/to/output/soundfiles/';
 %     numChannels = 8;  % how many channels in vocoding
-% 
+%
 %     % Check to make sure output directory exists
 %     if ~isdir(outputDirectory)
 %         mkdir(outputDirectory);
 %     end
-% 
+%
 %     % Get a list of all the .wav files in the input directory
 %     D = dir(fullfile(inputDirectory,'*.wav'));
-% 
+%
 %     % Go through each file, vocode it, and save it in the output directory
 %     fprintf('Vocoding %d files...', length(D));
-%     for fileInd = 1:length(D)    
-%         inputFullPath = fullfile(inputDirectory, D(fileInd).name);    
+%     for fileInd = 1:length(D)
+%         inputFullPath = fullfile(inputDirectory, D(fileInd).name);
 %         [inputPath, inputName, inputExt] = fileparts(inputFullPath);
-% 
-%         [wave, fs, bits] = jp_vocode(inputFullPath, numChannels);    
-%         outputFullPath = fullfile(outputDirectory, sprintf('%s_%02dchannels.wav', inputName, numChannels));    
-%         wavwrite(wave, fs, bits, outputFullPath);
+%
+%         [wave, fs, bits] = jp_vocode(inputFullPath, numChannels);
+%         outputFullPath = fullfile(outputDirectory, sprintf('%s_%02dchannels.wav', inputName, numChannels));
+%         audiowrite(wave, fs, bits, outputFullPath);
 %     end
-% 
+%
 %     fprintf('done. %d files written.\n', length(D));
 %
 %
 %   Jonathan Peelle
 %   Based on code from Stuart Rosen, based on work of Philip Loizou
 %   (I think).
+%
+%  From https://github.com/jpeelle/jp_matlab
 
 % error checking
 if num_channels < 1; error('Must have at least 1 channel.'); end
@@ -176,7 +178,7 @@ if opts.verbose > 0
 end
 
 % open the sound file
-[y, fs, bits] = wavread(soundfile);
+[y, fs, bits] = audioread(soundfile);
 num_samples = length(y);
 half_sample_rate = fs/2;
 
@@ -217,29 +219,29 @@ end
 
 % Design the input filters
 if opts.verbose==1; fprintf('Designing input filters...'); end
-infilterA=zeros(num_channels,opts.infilter_ord+1); 
-infilterB=zeros(num_channels,opts.infilter_ord+1); 
+infilterA=zeros(num_channels,opts.infilter_ord+1);
+infilterB=zeros(num_channels,opts.infilter_ord+1);
 
 for i=1:num_channels
-    W1=[inLower(i)/half_sample_rate, inUpper(i)/half_sample_rate];    
-    [b,a]=butter(3,W1);    
+    W1=[inLower(i)/half_sample_rate, inUpper(i)/half_sample_rate];
+    [b,a]=butter(3,W1);
     infilterB(i,1:opts.infilter_ord+1) = b;
     infilterA(i,1:opts.infilter_ord+1) = a;
-end 
+end
 if opts.verbose==1; fprintf('done.\n'); end
 
 
 % Design the output filters
 if opts.verbose==1; fprintf('Designing output filters...'); end
-outfilterA=zeros(num_channels,opts.outfilter_ord+1); 
-outfilterB=zeros(num_channels,opts.outfilter_ord+1); 
+outfilterA=zeros(num_channels,opts.outfilter_ord+1);
+outfilterB=zeros(num_channels,opts.outfilter_ord+1);
 
 for i=1:num_channels
     W1 = [outLower(i)/half_sample_rate, outUpper(i)/half_sample_rate];
     [b,a] = butter(3,W1);
     outfilterB(i,1:opts.outfilter_ord+1) = b;
     outfilterA(i,1:opts.outfilter_ord+1) = a;
-end 
+end
 if opts.verbose==1; fprintf('done.\n'); end
 
 
@@ -251,10 +253,10 @@ if opts.verbose==1; fprintf('done.\n'); end
 
 % create vectors for the necessary waveforms
 % 'x' is the original output waveform
-% not using!!!! ?? % 'y' contains a single output waveform, 
+% not using!!!! ?? % 'y' contains a single output waveform,
 %	the original after filtering through a bandpass filter
-% 'ModCarriers' contains the complete set of num_channel modulated white noises or 
-%  	sine waves, crreated by low-pass filtering the 'y' waveform, 
+% 'ModCarriers' contains the complete set of num_channel modulated white noises or
+%  	sine waves, crreated by low-pass filtering the 'y' waveform,
 % 	and multiplying the resultant by an appropriate carrier
 % 'band' contains the waveform associated with a single output channel, the modulated white
 %	noise or sinusoid after filtering
@@ -279,10 +281,10 @@ if opts.verbose==1; fprintf('Designing modulated carriers...\n'); end
 for i=1:num_channels
     % filter the original waveform into one channel
     analysisSounds(i,:) = filter(infilterB(i,:),infilterA(i,:),y)';
-    
+
     % calculate its level
     levels(i) = jp_rms(analysisSounds(i,:));
-    
+
     % rectify and lowpass filter the channel filter output, to obtain an envelope
     %-- half-wave rectify and smooth the filtered signal
     if strcmp(opts.rectify,'half')
@@ -292,9 +294,9 @@ for i=1:num_channels
     else
       error('opts.rectify must be ''half'' or ''full''.')
     end
-    
+
     % -- excite with noise ---
-    ModCarriers(i,:) = envelopes(i,:) .* sign(rand(1,num_samples)-0.5);    
+    ModCarriers(i,:) = envelopes(i,:) .* sign(rand(1,num_samples)-0.5);
 end
 
 
@@ -308,15 +310,15 @@ end
 if opts.verbose > 1; fprintf('Filtering components...\n'); end
 
 for i=1:num_channels
-    
+
     out_band = opts.outputmapping(i);
     band = filter(outfilterB(out_band,:),outfilterA(out_band,:), ModCarriers(i,:));
-    
+
     % scale component output waveform to have equal rms to input component,
     % as specified by opts.rmsmapping
     %fprintf('Dividing band %i by levels(%i), which is %.2f\n', i, opts.rmsmapping(i), levels(opts.rmsmapping(i)));
     band = band * levels(opts.rmsmapping(i))/jp_rms(band);
-        
+
     % accumulate waveforms
     wave = wave + band;
 end
@@ -328,7 +330,7 @@ wave = wave * input_level/jp_rms(wave);
 if opts.high_freq > 0
   if opts.verbose==1; fprintf('Lowpass filtering final sound...\n'); end
   % Design a lowpass filter and use it
-  [blpf, alpf] = ellip(6,0.5,35,opts.high_freq/half_sample_rate); 
+  [blpf, alpf] = ellip(6,0.5,35,opts.high_freq/half_sample_rate);
   wave = filtfilt(blpf,alpf,wave);
 end
 

@@ -10,7 +10,8 @@ function [y, fs] = jp_maketone(freq, durationSec, Cfg)
 %    CFG.rampUpSec    How long to linear ramp down for (default .005)
 %    CFG.rampDownSec  How long to linear ramp down for (default same as rampUpSec)
 %    CFG.fs           Sampling rate (default 22050)
-
+%
+%  From https://github.com/jpeelle/jp_matlab
 
 if nargin < 3
     Cfg = [];
@@ -60,4 +61,4 @@ if rampDownSamples > 0
 end
 
 % Put in column format to match other Matlab audio conventions
-y = y'; 
+y = y';

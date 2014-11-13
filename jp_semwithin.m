@@ -11,9 +11,8 @@ function sem = jp_semwithin(D)
 % D is a matrix of numbers with each row of containing data for one
 % subject, and each column data for one condition.
 %
-% Jonathan Peelle
-% MRC Cognition and Brain Sciences Unit
-% January 2010
+%
+%  From https://github.com/jpeelle/jp_matlab
 
 % First find the overall mean across conditions, across subjects
 overallmean = mean(mean(D,2));

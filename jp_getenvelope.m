@@ -17,8 +17,9 @@ function env = jp_getenvelope(s, fs, opts)
 % the unfiltered signal is returned.
 %
 % JP_GETENVELOPE requires the signal processing toolbox.
-%  
-% Jonathan Peelle
+%
+%
+%  From https://github.com/jpeelle/jp_matlab
 
 
 if nargin < 3
@@ -36,7 +37,7 @@ else
   % If not a .wav file, make sure fs is specified
   if nargin < 2 || isempty(fs)
     error('If S is not a .wav file, you must specify Fs.')
-  end  
+  end
 end
 
 half_sample_rate = fs/2;
@@ -73,10 +74,10 @@ if isempty(opts.edge_freqs)
     env = filter(lpB,lpA,abs(s));
   end
 else
-  
+
   % create a matrix for holding the envelopes, one per row
   env = zeros(length(opts.edge_freqs)-1, length(s));
-  
+
   for i=1:length(opts.edge_freqs)-1
     W1 = [opts.edge_freqs(i)/half_sample_rate, opts.edge_freqs(i+1)/half_sample_rate];
     [infilterB, infilterA] = butter(3,W1);
@@ -90,7 +91,7 @@ else
     elseif strcmp(opts.rectify,'full')
       env(i,:) = filter(lpB,lpA,abs(yy));
     end
-    
+
   end
-  
+
 end

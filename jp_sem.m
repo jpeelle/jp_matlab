@@ -1,8 +1,8 @@
-function [sem] = sem(X,dim)
-% SEM(X) Standard Error of the Mean for X along dimension
+function sem = jp_sem(X,dim)
+% SEM(X,DIM) Standard Error of the Mean for X along dimension
 % dim.  See STD for more info.
 %
-% by Jonathan Peelle
+%  From https://github.com/jpeelle/jp_matlab
 
 if nargin<2
     dim = min(find(size(X)~=1));

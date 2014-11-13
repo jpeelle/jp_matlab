@@ -6,7 +6,8 @@ function y3 = jp_addsounds(y1, y2, fs, cfg)
 %
 % cfg.offsetSecs: + values mean distractor after target, - values before
 % cfg.trimDistractorSecs = Inf; % If < Inf, run for this many seconds after target finishes
-
+%
+%  From https://github.com/jpeelle/jp_matlab
 
 if nargin < 4
     cfg = [];
@@ -47,19 +48,19 @@ end
 % If the distractor goes on longer than the target, see if we should trim
 % it. And if so, do it.
 if length(y2) > length(y1) && trimDistractorSecs < Inf
-   extra = trimDistractorSecs * fs; 
-    
+   extra = trimDistractorSecs * fs;
+
    % If there isn't enough distractor this won't work anyway
    try
        y2 = y2(1:(length(y1)+extra));
    catch
    end
-   
+
    if distractorFadeSecs > 0
        error('fade out not implemented yet');
-       
+
    end
-   
+
 end
 
 

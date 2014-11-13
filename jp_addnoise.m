@@ -27,8 +27,10 @@ function jp_addnoise(soundfiles, cfg)
 %  cfg = [];
 %  cfg.snrs = [0 5 10];
 %  cfg.noisefile = '/Users/peelle/Desktop/noise.wav';
-% 
+%
 %  jp_addnoise(inDir, cfg);
+%
+%  From https://github.com/jpeelle/jp_matlab
 
 
 if ~isfield(cfg, 'prestim') || isempty(cfg.prestim)
@@ -64,8 +66,8 @@ end
 if ischar(soundfiles) && isdir(soundfiles)
    soundDir = soundfiles;
    D = dir(fullfile(soundfiles, '*.wav'));
-   soundfiles = {D.name};    
-   
+   soundfiles = {D.name};
+
    for i=1:length(soundfiles)
        soundfiles{i} = fullfile(soundDir, soundfiles{i});
    end
@@ -76,60 +78,60 @@ else
     end
 end
 
-    
+
 % Get noise
-[yNoise, fsNoise, bitsNoise] = wavread(cfg.noisefile);
+[yNoise, fsNoise, bitsNoise] = audioread(cfg.noisefile);
 
 
 % Loop through soundfiles and add noise
 for i = 1:length(soundfiles);
-    
+
     thisSound = soundfiles{i};
-    
-    [y, fs, bits] = wavread(thisSound);
-    
+
+    [y, fs, bits] = audioread(thisSound);
+
     assert(fs==fsNoise, 'Sampling rate of sentence %s (%i) does not match that of noise (%i).', thisSound, fs, fsNoise);
 
     rmsSignal = jp_rms(y);
     dbSignal = jp_mag2db(rmsSignal);
-    
+
     % get the part of noise we need, and it's RMS and dB
     tmpNoise = yNoise(1:(length(y)+cfg.prestim*fs+cfg.poststim*fs));
     rmsNoise = jp_rms(tmpNoise);
     dbNoise = mag2db(rmsNoise);
-    
-    for thisSNR = cfg.snrs                
-        
+
+    for thisSNR = cfg.snrs
+
         targetDb = dbSignal - thisSNR; % target for noise dB
         targetRMS = 10^(targetDb/20);
         scaleFactor = targetRMS/rmsNoise;
-        
+
         scaledNoise = tmpNoise * scaleFactor;
-                        
+
         rmsScaledNoise = jp_rms(scaledNoise);
         dbScaledNoise = jp_mag2db(rmsScaledNoise);
         fprintf('SNR %g:\tsignal = %.1f, noise = %.1f dB\n', thisSNR, dbSignal, dbScaledNoise);
-        
+
         yNew = [zeros(cfg.prestim*fs,1); y; zeros(cfg.poststim*fs,1)] + scaledNoise;
-        
+
         if max(yNew) > 1
             warning('Signal %s clipping at %g.', thisSound, max(yNew));
         end
-        
+
         % write new file
         [pth, nm, ext] = fileparts(thisSound);
-        
+
         % decide where to save it - is cfg.outdir specified?
         if ~isempty(cfg.outdir)
             outDir = cfg.outdir;
         else
             outDir = pth;
         end
-        
+
         fileName = fullfile(outDir, sprintf('%s_SNR%d%s', nm, thisSNR, ext));
-        wavwrite(yNew, fs, bits, fileName);
-                
-    end % going through SNRs            
+        audiowrite(yNew, fs, bits, fileName);
+
+    end % going through SNRs
 end % looping through soundfiles
 
 end % main function

@@ -6,13 +6,14 @@ function [l, c, u] = jp_getfrequencies(low, high, n, opts)
 % optional opts has the following fields:
 %
 %  method  'log' or 'greenwood' (default 'log')
-% 
+%
 %
 % If the method is Greenwood, the equation from Greenwood (1961) is
 % used to approximate equal spacing along the basilar membrane.
 % This is similar to logrithmic but not identical.
 %
-% Jonathan Peelle
+%
+%  From https://github.com/jpeelle/jp_matlab
 
 
 
@@ -26,8 +27,8 @@ else
   if ~(strcmp(opts.method,'log') || strcmp(opts.method,'greenwood'))
     error('The method must be ''log'' or ''greenwood''.');
   end
-end 
-  
+end
+
 
 l = zeros(n); % lower frequencies
 c = zeros(n); % center frequencies
@@ -41,27 +42,27 @@ if strcmp(opts.method,'log')
 
   edges = [0:1:n];
   c = [0:1:n]+.5;
-  
+
   for i=1:length(edges)
     edges(i) = low * 10^(interval*edges(i));
     if i<length(edges)
       c(i) = low * 10^(interval*c(i));
     end
   end
-  l = edges(1:n);  
+  l = edges(1:n);
   u = edges(2:n+1);
-  
+
 elseif strcmp(opts.method,'greenwood')
   edges = [0:1:n]*(freq2mm(high)-freq2mm(low))/n + freq2mm(low);
   l = edges(1:n);
   u = edges(2:n+1);
   c = edges(1:n) + edges(2:n+1)/2;
- 
+
   % change back to frequencies
   l = mm2freq(l);
   u = mm2freq(u);
   c = mm2freq(c);
-  
+
 else
   error('Unsupported method for conversion.');
 end

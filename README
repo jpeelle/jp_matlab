@@ -1,0 +1,17 @@
+jp_matlab is a collection of helper scripts that I have written over the
+past few years. I hope they are helpful, but use at your own risk!
+
+In many cases the script will work on one sound file, stimulus, or
+directory, and some additional scripting will be needed to process all
+of the items you want to process for a particular project. I have tried
+to include *_wrapper.m scripts as examples for just this purpose.
+
+These scripts are provided under an MIT license (see LICENSE.txt).
+
+Please contact me if you find any errors!
+
+Jonathan Peelle
+Department of Otolaryngology
+Washington University in Saint Louis
+http://jonathanpeelle.net
+http://peellelab.org

@@ -2,10 +2,7 @@ function jp_scatterhistogram(X,Y,cfg)
 %JP_SCATTERHISTOGRAM Make a color-scaled scatterplot.
 %
 %
-
-% Jonathan Peelle
-% MRC Cognition and Brain Sciences Unit
-% July 2010
+%  From https://github.com/jpeelle/jp_matlab
 
 %% setup
 
@@ -49,10 +46,10 @@ end
 set(0,...
     'DefaultAxesLineWidth',1, ...
     'DefaultAxesFontSize',12, ...
-    'DefaultLineLineWidth',1.5 ...   
+    'DefaultLineLineWidth',1.5 ...
     )
-  
-  
+
+
 
 %% get a couple of things
 
@@ -63,7 +60,7 @@ numbins = cfg.numbins;
 
 xstep = (max(X)-min(X))/numbins;
 ystep = (max(Y)-min(Y))/numbins;
-  
+
 
 %% do it
 
@@ -78,14 +75,14 @@ for i=1:length(X)
 
     if xind==0; xind=1; end
     if yind==0; yind=1; end
-    
-      
+
+
     D(yind,xind) = D(yind,xind)+1;
-    
+
 end
 
 
-%% plot  
+%% plot
 %figure
 
 %h = imagesc(D);

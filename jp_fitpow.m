@@ -8,9 +8,11 @@ function [yy,b,a] = jp_fitpow(y,x)
 % By regressing a straight line on logy/logx, giving:
 %
 %    log(yy) = b*logx + a
-%    
+%
 %
 % N.B. assumes all values in y are >= 0.
+%
+%  From https://github.com/jpeelle/jp_matlab
 
 yflip = 0; % return yy the same as y was fed in
 

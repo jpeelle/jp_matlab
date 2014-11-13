@@ -14,7 +14,8 @@ function jp_equalizerms(inputDir,outputDir,verbose)
 %   large groups of files.
 %
 %   See also JP_EQUALIZEMAX.
-
+%
+%  From https://github.com/jpeelle/jp_matlab
 
 
 % Error checking
@@ -57,7 +58,7 @@ for i=1:length(D)
     fileName = D(i).name;
     % If it is a WAV file, get the RMS
     if length(fileName)>4 && strcmp(lower(fileName(end-3:end)),'.wav')
-        [y,fs,bits] = wavread(fullfile(inputDir,fileName));
+        [y,fs,bits] = audioread(fullfile(inputDir,fileName));
         rmsTotal = rmsTotal + rms(y);
         rmsCount = rmsCount+1;
     end
@@ -78,28 +79,28 @@ for i=1:length(D)
         % Keep track of how many 'real' files
         fileNumber = fileNumber + 1;
 
-        [y,fs,bits] = wavread(fullfile(inputDir,fileName));
+        [y,fs,bits] = audioread(fullfile(inputDir,fileName));
         thisRms = rms(y);
 
         y2 = y * (rmsMean/thisRms);
 
-        
+
         % Scale if over 1 or under -1
         if max(y2) > 1 || min(y2) < -1
             fprintf('File %s: MIN = %.3f, MAX = %.3f, scaling so as not to clip.\n', fileName, min(y2), max(y2));
             biggest = max([abs(min(y2)) max(y2)]);
             y2 = (y2/biggest) * .99;
         end
-        
-  
+
+
         % Make sure we were within error range
         if rms(y2)-rmsMean > .01*rmsMean
             fprintf('Warning for %s: Equalized RMS is %.3f, goal RMS is %.3f...\n',fileName,rms(y2),rmsMean);
         end
-        
-        
+
+
         % Write the new .wav file
-        wavwrite(y2,fs,bits,fullfile(outputDir,fileName));
+        audiowrite(y2,fs,bits,fullfile(outputDir,fileName));
 
         % Note how far along we are
         if verbose && rmsCount>20 && mod(fileNumber,round(rmsCount/10))==0

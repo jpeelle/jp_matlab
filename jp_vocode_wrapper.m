@@ -1,3 +1,6 @@
+%
+%  From https://github.com/jpeelle/jp_matlab
+
 inputDirectory = '/Users/peelle/Dropbox/work/stimuli/ORSR_6word_2001_vocoded2012';
 outputDirectory = '/Users/peelle/Desktop/DELETEME';
 channels = [8]; % you can have multiple levels here, e.g. [16 8 4]
@@ -10,7 +13,7 @@ channels = [8]; % you can have multiple levels here, e.g. [16 8 4]
 % code from: https://github.com/jpeelle/jp_matlab
 
 assert(exist('jp_vocode')==2, 'Required function jp_vocode is not found on your Matlab path.')
-    
+
 
 
 % Check to make sure output directory exists
@@ -25,14 +28,14 @@ D = dir(fullfile(inputDirectory,'*.wav'));
 fprintf('Vocoding %d files...\n', length(D));
 for fileInd = 1:length(D)
     fprintf('File %d/%d...', fileInd, length(D));
-    inputFullPath = fullfile(inputDirectory, D(fileInd).name);    
+    inputFullPath = fullfile(inputDirectory, D(fileInd).name);
     [inputPath, inputName, inputExt] = fileparts(inputFullPath);
-    
+
     % Do multiple channels for each file
-    for numChannels = channels        
+    for numChannels = channels
         [wave, fs, bits] = jp_vocode(inputFullPath, numChannels);
         outputFullPath = fullfile(outputDirectory, sprintf('%s_%02dch.wav', inputName, numChannels));
-        wavwrite(wave, fs, bits, outputFullPath);
+        audiowrite(wave, fs, bits, outputFullPath);
     end
     fprintf('done.\n');
 end

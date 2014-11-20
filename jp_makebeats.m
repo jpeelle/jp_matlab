@@ -82,12 +82,12 @@ end
 
 % If requested, add some silence before or after the sound
 if Cfg.padSoundBeginningSec > 0
-   pad = zeros(Cfg.padSoundBeginningSec * fs, 1);
+   pad = zeros(round(Cfg.padSoundBeginningSec * fs), 1);
    y = [pad; y];
 end
 
 if Cfg.padSoundEndSec > 0
-   pad = zeros(Cfg.padSoundEndSec * fs, 1);
+   pad = zeros(round(Cfg.padSoundEndSec * fs), 1);
    y = [y; pad];
 end
 

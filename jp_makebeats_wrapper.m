@@ -49,7 +49,7 @@ for thisBeatLength = beatLengths
         thisPattern = patterns{patternInd};
         [y, fs, name] = jp_makebeats(thisPattern, Cfg);
         
-        outName = fullfile(outDir, sprintf('patterm%03i_%s', patternInd, name));
+        outName = fullfile(outDir, sprintf('pattern%03i_%s', patternInd, name));
         
         audiowrite(outName, y, fs);
         fprintf('done.\n');

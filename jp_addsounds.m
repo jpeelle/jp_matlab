@@ -1,5 +1,5 @@
 function y3 = jp_addsounds(y1, y2, fs, cfg)
-% Add sounds
+%JP_ADDSOUNDS Add  two sounds (one target, one distractor)
 %
 % y1 target
 % y2 distractor

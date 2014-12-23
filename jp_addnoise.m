@@ -30,7 +30,7 @@ function jp_addnoise(soundfiles, cfg)
 %
 %  jp_addnoise(inDir, cfg);
 %
-%  From https://github.com/jpeelle/jp_matlab
+% From https://github.com/jpeelle/jp_matlab
 
 
 if ~isfield(cfg, 'prestim') || isempty(cfg.prestim)

@@ -37,6 +37,10 @@ if ~isfield(Cfg, 'fs') || isempty(Cfg.fs)
     Cfg.fs = 20050;
 end
 
+if ~isfield(Cfg, 'db') || isempty(Cfg.db)
+    Cfg.db = -25; % dB FS
+end
+
 
 fs = Cfg.fs;
 rampUpSamples = round(Cfg.rampUpSec * fs);
@@ -46,6 +50,11 @@ durationSamples = durationSec * fs;
 % Make sine tone
 t = 0:1/fs:durationSec;
 y = sin(freq*2*pi*t);
+
+% Adjust the dB NB for steady state (done before ramping)
+targetRMS = 10^(Cfg.db/20);
+scaleFactor = targetRMS/jp_rms(y);
+y = y * scaleFactor;
 
 % Ramp
 if rampUpSamples > 0

@@ -80,7 +80,7 @@ end
 
 
 % Get noise
-[yNoise, fsNoise, bitsNoise] = audioread(cfg.noisefile);
+[yNoise, fsNoise] = audioread(cfg.noisefile);
 
 
 % Loop through soundfiles and add noise
@@ -88,7 +88,7 @@ for i = 1:length(soundfiles);
 
     thisSound = soundfiles{i};
 
-    [y, fs, bits] = audioread(thisSound);
+    [y, fs] = audioread(thisSound);
 
     assert(fs==fsNoise, 'Sampling rate of sentence %s (%i) does not match that of noise (%i).', thisSound, fs, fsNoise);
 
@@ -129,27 +129,9 @@ for i = 1:length(soundfiles);
         end
 
         fileName = fullfile(outDir, sprintf('%s_SNR%d%s', nm, thisSNR, ext));
-        audiowrite(yNew, fs, bits, fileName);
+        audiowrite(fileName, yNew, fs);
 
     end % going through SNRs
 end % looping through soundfiles
 
 end % main function
-
-
-function x = jp_rms(y)
-%JP_RMS Root mean square.
-%
-%   X = JP_RMS(Y) where Y is a 1-by-N (or N-by-1) vector returns the root mean
-%   square value of Y:
-%
-%   x = sqrt(sum(y.^2)/length(y));
-
-if min(size(y))>1; error('RMS requires a 1-by-N or N-by-1 vector.'); end
-x = sqrt(mean(y.^2));
-end % rms function
-
-
-function dB = jp_mag2db(y)
-dB = 20*log10(y);
-end

@@ -12,7 +12,7 @@ channels = [8]; % you can have multiple levels here, e.g. [16 8 4]
 % it using the addpath function. You may need to download the jp_matlab
 % code from: https://github.com/jpeelle/jp_matlab
 
-assert(exist('jp_vocode')==2, 'Required function jp_vocode is not found on your Matlab path.')
+assert(exist('jp_vocode', 'file')==2, 'Required function jp_vocode is not found on your Matlab path.')
 
 
 
@@ -33,9 +33,9 @@ for fileInd = 1:length(D)
 
     % Do multiple channels for each file
     for numChannels = channels
-        [wave, fs, bits] = jp_vocode(inputFullPath, numChannels);
+        [wave, fs] = jp_vocode(inputFullPath, numChannels);
         outputFullPath = fullfile(outputDirectory, sprintf('%s_%02dch.wav', inputName, numChannels));
-        audiowrite(wave, fs, bits, outputFullPath);
+        audiowrite(outputFullPath, wave, fs);
     end
     fprintf('done.\n');
 end

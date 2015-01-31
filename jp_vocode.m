@@ -1,4 +1,4 @@
-function [wave, fs, bits] = jp_vocode(soundfile, num_channels, opts)
+function [wave, fs] = jp_vocode(soundfile, num_channels, opts)
 % JP_VOCODE Vocode a sound with the option to shift frequencies.
 %   [Y, FS, BITS] = JP_VOCODE(sound, num_channels, [opts])
 %   will return a sound vector Y at sampling rate FS with BITS bits
@@ -75,11 +75,13 @@ function [wave, fs, bits] = jp_vocode(soundfile, num_channels, opts)
 %
 %         [wave, fs, bits] = jp_vocode(inputFullPath, numChannels);
 %         outputFullPath = fullfile(outputDirectory, sprintf('%s_%02dchannels.wav', inputName, numChannels));
-%         audiowrite(wave, fs, bits, outputFullPath);
+%         audiowrite(outputFullPath, wave, fs);
 %     end
 %
 %     fprintf('done. %d files written.\n', length(D));
 %
+%
+%  See also JP_VOCODE_WRAPPER.
 %
 %   Jonathan Peelle
 %   Based on code from Stuart Rosen, based on work of Philip Loizou
@@ -178,7 +180,7 @@ if opts.verbose > 0
 end
 
 % open the sound file
-[y, fs, bits] = audioread(soundfile);
+[y, fs] = audioread(soundfile);
 num_samples = length(y);
 half_sample_rate = fs/2;
 

@@ -1,4 +1,4 @@
-function [wave, fs, bits] = jp_vocode(soundfile, num_channels, opts)
+function [wave, fs] = jp_vocode(soundfile, num_channels, opts)
 % JP_VOCODE Vocode a sound with the option to shift frequencies.
 %   [Y, FS, BITS] = JP_VOCODE(sound, num_channels, [opts])
 %   will return a sound vector Y at sampling rate FS with BITS bits
@@ -178,7 +178,7 @@ if opts.verbose > 0
 end
 
 % open the sound file
-[y, fs, bits] = audioread(soundfile);
+[y, fs] = audioread(soundfile);
 num_samples = length(y);
 half_sample_rate = fs/2;
 

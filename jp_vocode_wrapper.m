@@ -1,9 +1,9 @@
 %
 %  From https://github.com/jpeelle/jp_matlab
 
-inputDirectory = '/Users/peelle/Dropbox/work/stimuli/ORSR_6word_2001_vocoded2012';
-outputDirectory = '/Users/peelle/Desktop/DELETEME';
-channels = [8]; % you can have multiple levels here, e.g. [16 8 4]
+inputDirectory = '~/Desktop/soundFilesHere';
+outputDirectory = inputDirectory;   % (can specify a different save path if needed)
+channels = [1 2 4 8 16 32]; % you can have multiple levels here, e.g. [16 8 4]
 
 
 %% NB You probably don't have to change anything after this point
@@ -33,9 +33,9 @@ for fileInd = 1:length(D)
 
     % Do multiple channels for each file
     for numChannels = channels
-        [wave, fs, bits] = jp_vocode(inputFullPath, numChannels);
+        [wave, fs] = jp_vocode(inputFullPath, numChannels);
         outputFullPath = fullfile(outputDirectory, sprintf('%s_%02dch.wav', inputName, numChannels));
-        audiowrite(wave, fs, bits, outputFullPath);
+        audiowrite(outputFullPath, wave, fs);
     end
     fprintf('done.\n');
 end

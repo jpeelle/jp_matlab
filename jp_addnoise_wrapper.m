@@ -35,4 +35,4 @@ cfg.poststim = .5;
 cfg.snrs = [-5 0 5 10 15];
 cfg.outdir = ''; % if specified, save files here (otherwise, saved to input directory)
 
-jp_addnoise(originalDir, cfg);
+jp_addnoise(outDir, cfg);

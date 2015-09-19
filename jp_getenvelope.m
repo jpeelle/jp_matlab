@@ -29,7 +29,7 @@ end
 if ischar(s)
   [path,name,ext] = fileparts(s);
   if strcmp(lower(ext),'.wav')
-    [s, fs, bits] = wavread(s);
+    [s, fs] = audioread(s);
   else
     error('If a file, S must be a .wav file.')
   end

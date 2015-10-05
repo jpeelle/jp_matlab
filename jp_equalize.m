@@ -68,7 +68,7 @@ max_amplitude = 0;
 num_wav = 0; % keep track of how many wav files
 
 % If not going for target dB, loop through to get info.
-if ~strcmp(lower(Cfg.equaltype, 'db'))
+if ~strcmp(lower(Cfg.equaltype), 'db')
     
     if verbose > 0; fprintf('Looping through files to get info...'); end
     

@@ -12,7 +12,7 @@ channels = [1 2 4 8 16 32]; % you can have multiple levels here, e.g. [16 8 4]
 % it using the addpath function. You may need to download the jp_matlab
 % code from: https://github.com/jpeelle/jp_matlab
 
-assert(exist('jp_vocode')==2, 'Required function jp_vocode is not found on your Matlab path.')
+assert(exist('jp_vocode', 'file')==2, 'Required function jp_vocode is not found on your Matlab path.')
 
 
 

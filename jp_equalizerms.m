@@ -58,7 +58,7 @@ for i=1:length(D)
     fileName = D(i).name;
     % If it is a WAV file, get the RMS
     if length(fileName)>4 && strcmp(lower(fileName(end-3:end)),'.wav')
-        [y,fs,bits] = audioread(fullfile(inputDir,fileName));
+        [y,fs] = audioread(fullfile(inputDir,fileName));
         rmsTotal = rmsTotal + rms(y);
         rmsCount = rmsCount+1;
     end
@@ -79,7 +79,7 @@ for i=1:length(D)
         % Keep track of how many 'real' files
         fileNumber = fileNumber + 1;
 
-        [y,fs,bits] = audioread(fullfile(inputDir,fileName));
+        [y,fs] = audioread(fullfile(inputDir,fileName));
         thisRms = rms(y);
 
         y2 = y * (rmsMean/thisRms);
@@ -100,7 +100,7 @@ for i=1:length(D)
 
 
         % Write the new .wav file
-        audiowrite(y2,fs,bits,fullfile(outputDir,fileName));
+        audiowrite(fullfile(outputDir,fileName),y2,fs);
 
         % Note how far along we are
         if verbose && rmsCount>20 && mod(fileNumber,round(rmsCount/10))==0

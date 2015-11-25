@@ -70,7 +70,7 @@ for i=1:length(input_dirs)
         fileName = d(j).name;
         if length(fileName)>4 && strcmp(lower(fileName(end-3:end)),'.wav')
 
-            [y,fs,bits] = audioread(fullfile(input_dirs{i},fileName));
+            [y,fs] = audioread(fullfile(input_dirs{i},fileName));
             num_wav = num_wav + 1;
             if max(abs(y)) > max_amplitude
                 max_amplitude = max(abs(y));
@@ -101,12 +101,12 @@ for i=1:length(input_dirs)
             infile = fullfile(input_dirs{i}, fileName);
             movefile = fullfile(input_dirs{i}, sprintf('OLD%s',fileName));
 
-            [y,fs,bits] = audioread(infile);
+            [y,fs] = audioread(infile);
 
             y2 = y .* g;
 
             outfile = fullfile(output_dirs{i}, fileName);
-            audiowrite(y2, fs, bits, outfile)
+            audiowrite(outfile, y2, fs)
 
         end
     end

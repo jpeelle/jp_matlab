@@ -58,7 +58,7 @@ if ~isfield(Cfg, 'padSoundEndSec') || isempty(Cfg.padSoundEndSec)
 end
 
 pauseBetweenTones = zeros(round(Cfg.pauseBetweenTonesSec*Cfg.fs),1);
-toneDurationSec = Cfg.beatLengthSec - Cfg.pauseBetweenTonesSec;
+%toneDurationSec = Cfg.beatLengthSec - Cfg.pauseBetweenTonesSec;
 fs = Cfg.fs;
 
 % Initialize vector for holding things. It would be more efficient to not
@@ -68,15 +68,16 @@ y = [];
 
 toneCfg = [];
 toneCfg.fs = fs;
+toneCfg.max = 0.9; % tones should max at 0.9
 
 for note=pattern
-   tone = jp_maketone(Cfg.toneFreq, toneDurationSec * note, toneCfg);
+   tone = jp_maketone(Cfg.toneFreq, (Cfg.beatLengthSec * note) - Cfg.pauseBetweenTonesSec, toneCfg);
    y = [y; tone; pauseBetweenTones];        
 end
 
 % If requested, add one more beat at end
 if Cfg.endWithDownbeat
-    tone = jp_maketone(Cfg.toneFreq, toneDurationSec, toneCfg);
+    tone = jp_maketone(Cfg.toneFreq, Cfg.beatLengthSec, toneCfg);
     y = [y; tone];
 end
 

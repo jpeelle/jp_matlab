@@ -37,8 +37,19 @@ if ~isfield(Cfg, 'fs') || isempty(Cfg.fs)
     Cfg.fs = 20050;
 end
 
-if ~isfield(Cfg, 'db') || isempty(Cfg.db)
-    Cfg.db = -25; % dB FS
+
+if ~isfield(Cfg, 'max')
+    Cfg.max = [];
+end
+
+
+if ~isfield(Cfg, 'db') % can by empty, in which case, no db scaling
+    Cfg.db = []; % dB FS
+end
+
+
+if ~isempty(Cfg.max) && ~isempty(Cfg.db)
+    error('Can specify Cfg.max or Cfg.db, but not both.')
 end
 
 
@@ -52,9 +63,16 @@ t = 0:1/fs:durationSec;
 y = sin(freq*2*pi*t);
 
 % Adjust the dB NB for steady state (done before ramping)
-targetRMS = 10^(Cfg.db/20);
-scaleFactor = targetRMS/jp_rms(y);
-y = y * scaleFactor;
+if ~isempty(Cfg.db)
+    targetRMS = 10^(Cfg.db/20);
+    scaleFactor = targetRMS/jp_rms(y);
+    y = y * scaleFactor;
+else ~isempty(Cfg.max)
+    scaleFactor = Cfg.max/max(y);
+    y = y * scaleFactor;
+end
+
+
 
 % Ramp
 if rampUpSamples > 0

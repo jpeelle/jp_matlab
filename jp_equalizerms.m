@@ -19,8 +19,12 @@ function jp_equalizerms(inputDir,outputDir,verbose)
 
 
 % Error checking
-if nargin<2; error('Two arguments are required.'); end
-if nargin==2; verbose=0; end
+if nargin<2
+    outputDir = inputDir;
+end
+
+
+if nargin<3; verbose=0; end
 if nargin==3
     if ischar(verbose) && strcmp(lower(verbose),'verbose')
         verbose=1;

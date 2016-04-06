@@ -191,7 +191,7 @@ end
 
 
 % calculate input level, in terms of root sum squared
-input_level = norm(y,2);
+input_level = jp_rms(y);
 
 % decide logarithmic spacing based on lowest frequency requested
 low_freq = opts.input_range(1);
@@ -325,9 +325,6 @@ for i=1:num_channels
     wave = wave + band;
 end
 
-% Now make the whole sound level equal to the input level
-wave = wave * input_level/jp_rms(wave);
-
 
 if opts.high_freq > 0
   if opts.verbose==1; fprintf('Lowpass filtering final sound...\n'); end
@@ -337,11 +334,16 @@ if opts.high_freq > 0
 end
 
 
+% Now make the whole sound level equal to the input level
+wave = wave * input_level/jp_rms(wave);
+
+
 % correct for possible sample overloads
 max_sample = max(abs(wave));
 if max_sample > 0.999
-  ratio = 0.999/max_sample;
-  wave = wave * ratio;
+    fprintf('Scaling to avoid clipping...\n');
+    ratio = 0.999/max_sample;
+    wave = wave * ratio;
 end
 
 

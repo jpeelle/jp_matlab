@@ -67,7 +67,7 @@ if ~isempty(Cfg.db)
     targetRMS = 10^(Cfg.db/20);
     scaleFactor = targetRMS/jp_rms(y);
     y = y * scaleFactor;
-else ~isempty(Cfg.max)
+elseif ~isempty(Cfg.max)
     scaleFactor = Cfg.max/max(y);
     y = y * scaleFactor;
 end

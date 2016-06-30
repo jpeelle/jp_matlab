@@ -33,11 +33,11 @@ jp_equalizerms(outDir);
 
 %% Add noise
 
-cfg = [];
-cfg.noisefile = '/Users/peelle/Desktop/Heinrich_8talker_babble.wav';
-cfg.prestim = .5; % how much noise before stimulus, seconds
-cfg.poststim = .5;
-cfg.snrs = [-5 0 5 10 15];
-cfg.outdir = ''; % if specified, save files here (otherwise, saved to input directory)
+Cfg = [];
+Cfg.noisefile = '/Users/peelle/Desktop/Heinrich_8talker_babble.wav';
+Cfg.prestim = .5; % how much noise before stimulus, seconds
+Cfg.poststim = .5;
+Cfg.snrs = [-5 0 5 10 15];
+Cfg.outdir = ''; % if specified, save files here (otherwise, saved to input directory)
 
-jp_addnoise(outDir, cfg);
+jp_addnoise(outDir, Cfg);

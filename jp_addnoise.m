@@ -8,6 +8,7 @@ function jp_addnoise(soundfiles, cfg)
 %   CFG.prestim    how much noise before stimulus (seconds) [default .5]
 %   CFG.poststim   how much noise after stimulus (seconds) [default .5]
 %   CFG.snrs       SNRs used to add signal and noise (dB)
+%   CFG.extraText  text added in file name before "SNR". [default '']
 %   CFG.outdir     Make a new directory for output files by specifying path
 %
 % If SOUNDFILES is a directory, all of the .wav files in that directory are
@@ -47,6 +48,10 @@ end
 
 if ~isfield(cfg, 'snrs')
     error('Must specify CFG.snrs');
+end
+
+if ~isfield(cfg, 'extraText')
+    cfg.extraText = '';
 end
 
 if ~isfield(cfg, 'noisefile')
@@ -128,7 +133,7 @@ for i = 1:length(soundfiles);
             outDir = pth;
         end
 
-        fileName = fullfile(outDir, sprintf('%s_SNR%d%s', nm, thisSNR, ext));
+        fileName = fullfile(outDir, sprintf('%s_%sSNR%d%s', nm, cfg.extraText, thisSNR, ext));
         audiowrite(fileName, yNew, fs);
 
     end % going through SNRs

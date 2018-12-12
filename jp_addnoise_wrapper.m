@@ -11,7 +11,7 @@ clear all
 % The original files are in originalDir; the thinking is that these should
 % be read-only and never modified. If you want to add noise, change the
 % scaling, etc., you probably want to do this in a new directory (outDir).
-orginalDir = '/Volumes/OTO_Secure/Peelle_Lab/stimuli/Peelle_Lab_Sentences/original';
+originalDir = '/Volumes/OTO_Secure/Peelle_Lab/stimuli/Peelle_Lab_Sentences/original';
 outDir = '/Volumes/OTO_Secure/Peelle_Lab/stimuli/Peelle_Lab_Sentences/babble_8talker_2014-11';
 
 

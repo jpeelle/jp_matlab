@@ -90,7 +90,9 @@ function [wave, fs] = jp_vocode(soundfile, num_channels, opts)
 %  From https://github.com/jpeelle/jp_matlab
 
 % error checking
-if num_channels < 1; error('Must have at least 1 channel.'); end
+
+assert(min(size(soundfile))==1, 'Sound file must be mono.');
+assert(num_channels > 0, 'Must have at least 1 channel.');
 
 [pathstr, filename, fileext] = fileparts(soundfile);
 

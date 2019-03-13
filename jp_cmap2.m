@@ -1,18 +1,18 @@
 function cmap = jp_cmap2(hotColor, coolColor, midColor, nSteps)
-%JP_CMAP2 Colormap generator for two colors ("hotcmap" and "cold").
+%JP_CMAP2 Colormap generator for two colors ("HOT" and "COLD").
 %
 % CMAP = JP_CMAP2 provides default red/blue colormap.
 %
-% CMAP = JP_CMAP2(hotcmap, coolcmap) lets you specify the RGB values for the max
-% hotcmap and coolcmap values. If any number in a color is > 1, the values are
-% divided by 255. (This allows you to specify in standard RGB values 0-255,
-% or Matlab values 0-1.)
+% CMAP = JP_CMAP2(HOT, COLD) lets you specify the RGB values for
+% the HOT and COLD values. If any number in a color is > 1, the
+% values are divided by 255. (This allows you to specify in standard RGB
+% values 0-255, or Matlab values 0-1.)
 %
-% CMAP = JP_CMAP2(hotcmap, coolcmap, MID) uses the specified color for the middle
-% color (i.e., a 0 value). Default is white.
+% CMAP = JP_CMAP2(HOT, COLD, MID) uses the specified color for the
+% middle color (i.e., a 0 value). Default is white.
 %
-% CMAP = JP_CMAP2(hotcmap, coolcmap, MIDCOLOR, NSTEPS) uses the specified number of steps to
-% go from MIDCOLOR to hotcmap or coolcmap (default 100)/
+% CMAP = JP_CMAP2(HOT, COLD, MIDCOLOR, NSTEPS) uses the specified
+% number of steps to go from MIDCOLOR to HOT or COLD (default 100).
 
 
 if nargin < 4 || isempty(nSteps)

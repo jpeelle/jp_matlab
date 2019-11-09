@@ -19,7 +19,11 @@ for i=1:length(inputDirs)
 
             wavFile = fullfile(inputDirs{i},fileName);
 
-            [y,fs] = audioread(wavFile);
+            try
+                [y,fs] = audioread(wavFile);
+            catch
+                error('Error reading %s.', wavFile);
+            end
 
             if size(y,2) > 1
                 fprintf('Made %s mono.\n', wavFile);

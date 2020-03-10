@@ -5,6 +5,12 @@ function jp_makemono(inputDirs);
 %
 %  From https://github.com/jpeelle/jp_matlab
 
+fprintf('\n');
+
+if ischar(inputDirs)
+    inputDirs = {inputDirs};
+end
+
 for i=1:length(inputDirs)
     d = dir(inputDirs{i});
     for j = 1:length(d)
@@ -13,11 +19,18 @@ for i=1:length(inputDirs)
 
             wavFile = fullfile(inputDirs{i},fileName);
 
-            [y,fs,bits] = audioread(wavFile);
+            try
+                [y,fs] = audioread(wavFile);
+            catch
+                error('Error reading %s.', wavFile);
+            end
 
-            if size(y,1) > 1
-                audiowrite(y(:,1), fs, bits, wavFile);
+            if size(y,2) > 1
+                fprintf('Made %s mono.\n', wavFile);
+                audiowrite(wavFile, y(:,1), fs);
             end
         end
     end
 end % going through inputDirs to get files
+
+fprintf('All done.\n\n');

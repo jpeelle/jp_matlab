@@ -14,21 +14,39 @@ if nargin < 1 || isempty(baseDir)
 end
 
 if isempty(fileExt)
-    files = dir(baseDir)
+    files = dir(baseDir);
 else
     files = dir(fullfile(baseDir, sprintf('*.%s', fileExt)));
 end
 
-for fileInd = 1:1  %length(files)
+assert(isdir(baseDir), 'Selected directory does not exist.');
+
+assert(length(files)>0, 'Must select at least one file.');
+
+
+% If no prefix supplied, add the directory name
+if isempty(prefix)
+    [pth, nm] = fileparts(baseDir);
+    prefix = [nm '_'];
+end
+
+for fileInd = 1:length(files)
     % Rename files
     thisFile = files(fileInd).name;
     
     if length(thisFile) > 3
         
-        [nm, ext] = fileparts(files(fileInd).name);
+        [pth, nm, ext] = fileparts(files(fileInd).name);
         
-        originalFile = fullfile(baseDir, [nm ext])
-        newFile = fullfile(baseDir, [prefix nm ext])
+        originalFile = fullfile(baseDir, [nm ext]);        
+        newFile = fullfile(baseDir, [prefix nm ext]);
+        
+        cmd = sprintf('mv %s %s', originalFile, newFile);  
+        [status, ~] = system(cmd);
+        
+        if status > 0
+            warning('mv command failed with %s', cmd);
+        end
         
     end
 end

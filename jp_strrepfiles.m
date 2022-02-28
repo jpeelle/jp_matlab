@@ -59,6 +59,7 @@ for fileInd = 1:length(files)
         
         % escape spaces
         originalFile = replace(originalFile, ' ', '\ ');
+        newFile = replace(newFile, ' ', '\ ');
         
         cmd = sprintf('mv %s %s', originalFile, newFile);
         [status, ~] = system(cmd);

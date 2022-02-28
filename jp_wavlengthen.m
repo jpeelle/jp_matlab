@@ -25,9 +25,9 @@ if nargin < 4
     suffix = '_L';
 end
 
-if exist(A, 'file') && ~isdir(A) && strcmp(lower(A(end-4:end)), '.wav')
+if exist(A, 'file') && ~isfolder(A) && strcmpi(A(end-3:end), '.wav')
    addtime(A, time_beg_ms, time_end_ms, suffix);
-elseif isdir(A)
+elseif isfolder(A)
     processdir(A, time_beg_ms, time_end_ms, suffix);
 elseif iscell(A)
     for i=1:length(A)
@@ -47,7 +47,7 @@ function processdir(A, time_beg, time_end, suffix)
     d = dir(A);
     for i=1:length(d)
         [pth, n, ext] = fileparts(d(i).name);
-        if strcmp(lower(ext), '.wav')
+        if strcmpi(ext, '.wav')
            addtime(fullfile(A, d(i).name), time_beg, time_end, suffix);
         end
     end
@@ -58,12 +58,12 @@ end
 function addtime(A, time_beg, time_end, suffix)
     [pth, fname] = fileparts(A);
     newname = fullfile(pth, sprintf('%s%s.wav', fname, suffix));
-    [y, fs, bits] = wavread(A);
+    [y, fs] = audioread(A);
 
     time_beg_s = time_beg/1000;
     time_end_s = time_end/1000;
 
     y2 = [zeros(time_beg_s*fs,1); y; zeros(time_end_s*fs,1)];
 
-    wavwrite(y2, fs, bits, newname);
+    audiowrite(newname, y2, fs);
 end % addtime

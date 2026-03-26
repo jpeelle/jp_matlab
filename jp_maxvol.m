@@ -68,9 +68,20 @@ for i=1:length(input_dirs)
     d = dir(input_dirs{i});
     for j = 1:length(d)
         fileName = d(j).name;
+        
         if length(fileName)>4 && strcmp(lower(fileName(end-3:end)),'.wav')
 
-            [y,fs] = audioread(fullfile(input_dirs{i},fileName));
+            % Warn if weird things in file name, this often breaks things
+            if contains(fileName, " ")
+                warning('File %s contains a space which may break things.', fileName);
+            end
+            
+            try
+                [y,fs] = audioread(fullfile(input_dirs{i},fileName));
+            catch
+                error('Problem reading %s.', fileName);
+            end
+
             num_wav = num_wav + 1;
             if max(abs(y)) > max_amplitude
                 max_amplitude = max(abs(y));
